@@ -13,4 +13,4 @@ swift-watch-test dir isolate="":
   {{ if isolate != "" { "--filter " + isolate } else { "" } }} "'
 
 watch-api:
-  @just watch-swift Sources 'swift run'
+  @just watch-swift api/Sources 'swift run --package-path api'

@@ -5,6 +5,12 @@ func routes(_ app: Application) throws {
     "It works!"
   }
 
+  app.get("cards") { req -> String in
+    let encoder = JSONEncoder()
+    let json = try encoder.encode(cards)
+    return String(data: json, encoding: .utf8)!
+  }
+
   app.get("hello") { req async -> String in
     "Hello, world!"
   }
@@ -19,3 +25,10 @@ func routes(_ app: Application) throws {
     "something"
   }
 }
+
+struct Card: Codable {
+  var question: String
+  var answer: String
+}
+
+let cards = [Card(question: "hola", answer: "hello"), Card(question: "adios", answer: "goodbye")]
