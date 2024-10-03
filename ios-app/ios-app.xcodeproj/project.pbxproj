@@ -7,6 +7,9 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		2CC64F6A2CAF2F330067E36F /* HTTPDataDownloader.wift.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2CC64F692CAF2F330067E36F /* HTTPDataDownloader.wift.swift */; };
+		2CC64F6E2CAF30180067E36F /* CardClient.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2CC64F6D2CAF30180067E36F /* CardClient.swift */; };
+		2CC64F702CAF31550067E36F /* CardProvider.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2CC64F6F2CAF31550067E36F /* CardProvider.swift */; };
 		2CD449332CA60228008E9F77 /* ios_appApp.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2CD449322CA60228008E9F77 /* ios_appApp.swift */; };
 		2CD449352CA60228008E9F77 /* ContentView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2CD449342CA60228008E9F77 /* ContentView.swift */; };
 		2CD449372CA6022A008E9F77 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 2CD449362CA6022A008E9F77 /* Assets.xcassets */; };
@@ -14,6 +17,9 @@
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
+		2CC64F692CAF2F330067E36F /* HTTPDataDownloader.wift.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = HTTPDataDownloader.wift.swift; sourceTree = "<group>"; };
+		2CC64F6D2CAF30180067E36F /* CardClient.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CardClient.swift; sourceTree = "<group>"; };
+		2CC64F6F2CAF31550067E36F /* CardProvider.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CardProvider.swift; sourceTree = "<group>"; };
 		2CD4492F2CA60228008E9F77 /* ios-app.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = "ios-app.app"; sourceTree = BUILT_PRODUCTS_DIR; };
 		2CD449322CA60228008E9F77 /* ios_appApp.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ios_appApp.swift; sourceTree = "<group>"; };
 		2CD449342CA60228008E9F77 /* ContentView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ContentView.swift; sourceTree = "<group>"; };
@@ -54,6 +60,9 @@
 				2CD449322CA60228008E9F77 /* ios_appApp.swift */,
 				2CD449342CA60228008E9F77 /* ContentView.swift */,
 				2CD449362CA6022A008E9F77 /* Assets.xcassets */,
+				2CC64F692CAF2F330067E36F /* HTTPDataDownloader.wift.swift */,
+				2CC64F6D2CAF30180067E36F /* CardClient.swift */,
+				2CC64F6F2CAF31550067E36F /* CardProvider.swift */,
 				2CD449382CA6022A008E9F77 /* Preview Content */,
 			);
 			path = "ios-app";
@@ -137,6 +146,9 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				2CC64F702CAF31550067E36F /* CardProvider.swift in Sources */,
+				2CC64F6E2CAF30180067E36F /* CardClient.swift in Sources */,
+				2CC64F6A2CAF2F330067E36F /* HTTPDataDownloader.wift.swift in Sources */,
 				2CD449352CA60228008E9F77 /* ContentView.swift in Sources */,
 				2CD449332CA60228008E9F77 /* ios_appApp.swift in Sources */,
 			);

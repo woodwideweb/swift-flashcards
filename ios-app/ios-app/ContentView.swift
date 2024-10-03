@@ -8,12 +8,11 @@
 import SwiftUI
 
 struct ContentView: View {
+    @EnvironmentObject var cardProvider: CardProvider
     var body: some View {
         VStack {
-            Image(systemName: "globe")
-                .imageScale(.large)
-                .foregroundStyle(.tint)
-            Text("Hello, world!")
+            Text("Welcome to Flashcards!")
+            Text("")
         }
         .padding()
     }
