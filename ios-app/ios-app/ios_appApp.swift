@@ -9,7 +9,6 @@ import SwiftUI
 
 @main
 struct ios_appApp: App {
-    @StateObject var quakesProvider = CardProvider()
     var body: some Scene {
         WindowGroup {
             ContentView()
