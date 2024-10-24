@@ -37,14 +37,19 @@ struct ContentView: View {
     }
     
     func getCards() async {
-        do {
-            let (data, _) = try await URLSession.shared.data(from: URL.api(path: "/cards"))
-            let decoder = JSONDecoder()
-            let cards = try decoder.decode([Card].self, from: data)
-            self.state = .loaded(cards)
-        } catch {
-            self.state = .failed
+        let cardResult = await getDataResult([Card].self, url: URL.api(path: "/cards"))
+        switch cardResult {
+            case .success(let cards):
+                self.state = .loaded(cards)
+            case .failure:
+                self.state = .failed
         }
+//          do {
+//            let cards = try await getData([Card].self, url: URL.api(path: "/cards"))
+//            self.state = .loaded(cards)
+//        } catch {
+//            self.state = .failed
+//        }
     }
 }
 
@@ -62,3 +67,24 @@ extension URL {
         return URL(string: "http://127.0.0.1:8080\(path)")!
     }
 }
+
+func getData<T: Codable>(_ t: T.Type, url: URL) async throws -> T {
+    let (data, _) = try await URLSession.shared.data(from: url)
+    let decoder = JSONDecoder()
+    let decodedData = try decoder.decode(t, from: data)
+    return decodedData
+}
+
+func getDataResult<T: Codable>(_ t: T.Type, url: URL) async -> Result<T, Error> {
+    do {
+        let (data, _) = try await URLSession.shared.data(from: url)
+        let decoder = JSONDecoder()
+        let decodedData = try decoder.decode(t, from: data)
+        return .success(decodedData)
+    } catch {
+        return .failure(error)
+    }
+    
+}
+
+extension String: Error {}
