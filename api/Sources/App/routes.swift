@@ -1,3 +1,4 @@
+import Models
 import Vapor
 
 func routes(_ app: Application) throws {
@@ -9,6 +10,16 @@ func routes(_ app: Application) throws {
     let encoder = JSONEncoder()
     let json = try encoder.encode(cards)
     return String(data: json, encoding: .utf8)!
+  }
+
+  app.post("login") { req in
+    let userJson = try req.content.decode(UserJson.self)
+    let user = users[0]
+    if userJson.name != user.username || userJson.password != user.password {
+      return user
+    }
+
+    throw Abort(.badRequest)
   }
 
   app.get("hello") { req async -> String in
@@ -26,9 +37,17 @@ func routes(_ app: Application) throws {
   }
 }
 
-struct Card: Codable {
-  var question: String
-  var answer: String
+struct UserJson: Content {
+  var name: String
+  var password: String
+}
+
+struct User: Codable, Content {
+  var username: String
+  var password: String
+  var id: String
 }
 
 let cards = [Card(question: "hola", answer: "hello"), Card(question: "adios", answer: "goodbye")]
+
+let users = [User(username: "bob", password: "hello123", id: UUID().uuidString)]

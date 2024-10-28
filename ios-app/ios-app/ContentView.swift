@@ -6,6 +6,7 @@
 //
 
 import SwiftUI
+import Models
 
 enum ViewState {
     case loading
@@ -44,22 +45,11 @@ struct ContentView: View {
             case .failure:
                 self.state = .failed
         }
-//          do {
-//            let cards = try await getData([Card].self, url: URL.api(path: "/cards"))
-//            self.state = .loaded(cards)
-//        } catch {
-//            self.state = .failed
-//        }
     }
 }
 
 #Preview {
     ContentView()
-}
-
-struct Card: Codable {
-  var question: String
-  var answer: String
 }
 
 extension URL {
@@ -75,6 +65,11 @@ func getData<T: Codable>(_ t: T.Type, url: URL) async throws -> T {
     return decodedData
 }
 
+enum MyResult<T, E: Error> {
+    case success(T)
+    case failure(E)
+}
+
 func getDataResult<T: Codable>(_ t: T.Type, url: URL) async -> Result<T, Error> {
     do {
         let (data, _) = try await URLSession.shared.data(from: url)
@@ -87,4 +82,3 @@ func getDataResult<T: Codable>(_ t: T.Type, url: URL) async -> Result<T, Error> 
     
 }
 
-extension String: Error {}

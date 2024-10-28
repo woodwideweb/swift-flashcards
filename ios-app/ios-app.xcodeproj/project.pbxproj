@@ -3,11 +3,12 @@
 	archiveVersion = 1;
 	classes = {
 	};
-	objectVersion = 56;
+	objectVersion = 60;
 	objects = {
 
 /* Begin PBXBuildFile section */
 		2C93E52C2CC19B3500244A80 /* CardDisplay.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2C93E52B2CC19B3500244A80 /* CardDisplay.swift */; };
+		2CC285A42CCAEB7700B4B904 /* Models in Frameworks */ = {isa = PBXBuildFile; productRef = 2CC285A32CCAEB7700B4B904 /* Models */; };
 		2CD449332CA60228008E9F77 /* ios_appApp.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2CD449322CA60228008E9F77 /* ios_appApp.swift */; };
 		2CD449352CA60228008E9F77 /* ContentView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2CD449342CA60228008E9F77 /* ContentView.swift */; };
 		2CD449372CA6022A008E9F77 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 2CD449362CA6022A008E9F77 /* Assets.xcassets */; };
@@ -28,6 +29,7 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				2CC285A42CCAEB7700B4B904 /* Models in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -86,6 +88,9 @@
 			dependencies = (
 			);
 			name = "ios-app";
+			packageProductDependencies = (
+				2CC285A32CCAEB7700B4B904 /* Models */,
+			);
 			productName = "ios-app";
 			productReference = 2CD4492F2CA60228008E9F77 /* ios-app.app */;
 			productType = "com.apple.product-type.application";
@@ -114,6 +119,9 @@
 				Base,
 			);
 			mainGroup = 2CD449262CA60228008E9F77;
+			packageReferences = (
+				2CC285A22CCAEB7700B4B904 /* XCLocalSwiftPackageReference "../Models" */,
+			);
 			productRefGroup = 2CD449302CA60228008E9F77 /* Products */;
 			projectDirPath = "";
 			projectRoot = "";
@@ -346,6 +354,20 @@
 			defaultConfigurationName = Release;
 		};
 /* End XCConfigurationList section */
+
+/* Begin XCLocalSwiftPackageReference section */
+		2CC285A22CCAEB7700B4B904 /* XCLocalSwiftPackageReference "../Models" */ = {
+			isa = XCLocalSwiftPackageReference;
+			relativePath = ../Models;
+		};
+/* End XCLocalSwiftPackageReference section */
+
+/* Begin XCSwiftPackageProductDependency section */
+		2CC285A32CCAEB7700B4B904 /* Models */ = {
+			isa = XCSwiftPackageProductDependency;
+			productName = Models;
+		};
+/* End XCSwiftPackageProductDependency section */
 	};
 	rootObject = 2CD449272CA60228008E9F77 /* Project object */;
 }
