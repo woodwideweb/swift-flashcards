@@ -9,3 +9,15 @@ public struct Card: Codable {
     self.answer = answer
   }
 }
+
+public struct User: Codable {
+  public var username: String
+  public var password: String
+  public var id: String
+
+  public init(username: String, password: String, id: String) {
+    self.username = username
+    self.password = password
+    self.id = id
+  }
+}

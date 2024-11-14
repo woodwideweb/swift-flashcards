@@ -15,7 +15,9 @@ func routes(_ app: Application) throws {
   app.post("login") { req in
     let userJson = try req.content.decode(UserJson.self)
     let user = users[0]
-    if userJson.name != user.username || userJson.password != user.password {
+    print(userJson)
+    print(user)
+    if userJson.name == user.username || userJson.password == user.password {
       return user
     }
 
@@ -42,11 +44,7 @@ struct UserJson: Content {
   var password: String
 }
 
-struct User: Codable, Content {
-  var username: String
-  var password: String
-  var id: String
-}
+extension User: Content {}
 
 let cards = [Card(question: "hola", answer: "hello"), Card(question: "adios", answer: "goodbye")]
 

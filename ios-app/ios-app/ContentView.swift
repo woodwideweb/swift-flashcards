@@ -14,26 +14,25 @@ enum ViewState {
     case failed
 }
 
+extension String {
+    static let userIdKey = "UserID"
+}
+
 struct ContentView: View {
-    @State var state: ViewState = .loading
+    @State private var state: ViewState = .loading
+    @State private var userID = UserDefaults.standard.string(forKey: .userIdKey)
+    
     var body: some View {
-        VStack {
-            switch self.state {
-            case .loading:
-                ProgressView()
-            case .failed:
-                Text("Something went wrong. No cards to display")
-                
-            case .loaded(let cards):
-                Text("Welcome to Flashcards!")
-                ForEach(cards, id: \.question) { card in
-                    CardDisplay(front:card.question, back:card.answer)
-                }
+        if userID != nil {
+            VStack {
+                CardViewer(state: state)
+                    .padding()
             }
-        }
-        .padding()
-        .task {
-            await self.getCards()
+            .task {
+                await self.getCards()
+            }
+        } else {
+            LoginFormContainer(userID: $userID)
         }
     }
     
