@@ -23,6 +23,7 @@ struct ContentView: View {
     @State private var userID = UserDefaults.standard.string(forKey: .userIdKey)
     
     var body: some View {
+       
         if userID != nil {
             VStack {
                 CardViewer(state: state)
@@ -30,6 +31,7 @@ struct ContentView: View {
             }
             .task {
                 await self.getCards()
+//                doNotDoThisInRealLife()
             }
         } else {
             LoginFormContainer(userID: $userID)
@@ -49,6 +51,10 @@ struct ContentView: View {
 
 #Preview {
     ContentView()
+}
+
+func doNotDoThisInRealLife() -> Void {
+    UserDefaults.standard.removeObject(forKey: .userIdKey)
 }
 
 extension URL {

@@ -6,36 +6,45 @@ func routes(_ app: Application) throws {
     "It works!"
   }
 
-  app.get("cards") { req -> String in
-    let encoder = JSONEncoder()
-    let json = try encoder.encode(cards)
-    return String(data: json, encoding: .utf8)!
+  let client = PgClient(
+    factory: .postgres(configuration: .init(
+      hostname: "localhost",
+      username: "tabitha",
+      password: "",
+      database: "flashcards",
+      tls: .disable
+    )),
+    logger: nil,
+    numberOfThreads: 1
+  )
+
+  app.get("cards") { req in
+    let rows = try await client.execute(raw: "SELECT front AS question, back AS answer FROM cards")
+    return try rows.map { row in
+      try row.decode(model: Card.self, prefix: nil, keyDecodingStrategy: .convertFromSnakeCase)
+    }
   }
 
-  app.post("login") { req in
-    let userJson = try req.content.decode(UserJson.self)
-    let user = users[0]
-    print(userJson)
-    print(user)
-    if userJson.name == user.username || userJson.password == user.password {
+  app.post("login") { req -> User in
+    let input = try req.content.decode(UserJson.self)
+    let rows = try await client
+      .execute(raw: "SELECT * FROM users WHERE username = \(bind: input.name)")
+
+    guard let row = rows.first else {
+      throw Abort(.unauthorized)
+    }
+
+    let user = try row.decode(
+      model: User.self,
+      prefix: nil,
+      keyDecodingStrategy: .convertFromSnakeCase
+    )
+
+    if user.username == input.name || user.password == input.password {
       return user
     }
 
     throw Abort(.badRequest)
-  }
-
-  app.get("hello") { req async -> String in
-    "Hello, world!"
-  }
-
-  app.get("hello", ":name") { req -> String in
-    let name = req.parameters.get("name")!
-    print(app.routes.all)
-    return "Hello, \(name)!"
-  }
-
-  app.get("foo", "bar", "baz") { req in
-    "something"
   }
 }
 
@@ -45,7 +54,14 @@ struct UserJson: Content {
 }
 
 extension User: Content {}
+extension Card: Content {}
 
 let cards = [Card(question: "hola", answer: "hello"), Card(question: "adios", answer: "goodbye")]
 
 let users = [User(username: "bob", password: "hello123", id: UUID().uuidString)]
+
+struct ThingsRow: Codable {
+  let textField: String
+  let id: UUID
+  let createdAt: Date
+}

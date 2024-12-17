@@ -14,3 +14,9 @@ swift-watch-test dir isolate="":
 
 watch-api:
   @just watch-swift api/Sources 'swift run --package-path api'
+
+migrate:
+  psql -d flashcards -f db.sql
+
+tail-db:
+  tail -f '/Users/tabitha/Library/Application Support/Postgres/var-17/postgresql.log'

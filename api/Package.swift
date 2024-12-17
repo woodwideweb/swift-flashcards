@@ -11,6 +11,7 @@ let package = Package(
     // 💧 A server-side Swift web framework.
     .package(url: "https://github.com/vapor/vapor.git", from: "4.89.0"),
     .package(path: "../Models"),
+    .package(url: "https://github.com/vapor/fluent-postgres-driver", from: "2.9.2"),
   ],
   targets: [
     .executableTarget(
@@ -18,7 +19,9 @@ let package = Package(
       dependencies: [
         .product(name: "Vapor", package: "vapor"),
         .product(name: "Models", package: "Models"),
+        .product(name: "FluentPostgresDriver", package: "fluent-postgres-driver"),
       ]
+
     ),
     .testTarget(name: "AppTests", dependencies: [
       .target(name: "App"),
