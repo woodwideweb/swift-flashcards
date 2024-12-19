@@ -20,7 +20,7 @@ extension String {
 
 struct ContentView: View {
     @State private var state: ViewState = .loading
-    @State private var userID = UserDefaults.standard.string(forKey: .userIdKey)
+    @State private var userID: String? = UserDefaults.standard.string(forKey: .userIdKey)
     
     var body: some View {
        
@@ -28,9 +28,11 @@ struct ContentView: View {
             VStack {
                 CardViewer(state: state)
                     .padding()
+                LogoutButton(userID: $userID)
             }
             .task {
                 await self.getCards()
+                
 //                doNotDoThisInRealLife()
             }
         } else {
