@@ -8,17 +8,12 @@
 import SwiftUI
 
 struct LogoutButton: View {
-    @Binding var userID: String?
-    
-    var body: some View {
-        Button("Log Out") {
-            self.userID = nil
-        }
-        .font(.title3)
-    }
-    
-}
+  @Binding var userID: String?
 
-//#Preview {
-//    LogoutButton()
-//}
+  var body: some View {
+    Button("Log Out") {
+      self.userID = nil
+    }
+    .font(.title3)
+  }
+}

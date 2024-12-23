@@ -21,3 +21,13 @@ public struct User: Codable {
     self.id = id
   }
 }
+
+public struct UserJson: Codable {
+  public var name: String
+  public var password: String
+
+  public init(name: String, password: String) {
+    self.name = name
+    self.password = password
+  }
+}

@@ -66,14 +66,11 @@ func routes(_ app: Application) throws {
   }
 }
 
-struct UserJson: Content {
-  var name: String
-  var password: String
-}
-
-struct UserDataCard: Content {
-  var id: String
-}
+// struct UserJson: Content {
+// var name: String
+// var password: String
+// }
 
 extension User: Content {}
 extension Card: Content {}
+extension UserJson: Content {}
