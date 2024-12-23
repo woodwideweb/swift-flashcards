@@ -6,6 +6,8 @@
 //
 
 import Models
+import SwiftUI
+import Foundation
 
 
 enum ViewState {
@@ -20,7 +22,7 @@ extension String {
 
 struct ContentView: View {
   @State private var state: ViewState = .loading
-  @AppStorage(.userIdKey) private var userID: String?
+  @AppStorage(.userIdKey) private var userID: UUID?
 
   var body: some View {
 
@@ -38,7 +40,7 @@ struct ContentView: View {
     }
   }
 
-  func getCards(id: String) async throws {
+  func getCards(id: UUID) async throws {
     let cardResult = await getDataResult([Card].self, url: URL.api(path: "/cards/\(id)"))
     switch cardResult {
     case .success(let cards):
@@ -51,4 +53,18 @@ struct ContentView: View {
 
 #Preview {
   ContentView()
+}
+
+// this is something I got off StackOverflow to make an error go away
+// I have no idea what it's doing or what this protocol is
+extension UUID: RawRepresentable {
+    public var rawValue: String {
+        self.uuidString
+    }
+
+    public typealias RawValue = String
+
+    public init?(rawValue: RawValue) {
+        self.init(uuidString: rawValue)
+    }
 }

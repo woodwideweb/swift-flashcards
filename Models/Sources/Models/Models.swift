@@ -1,5 +1,7 @@
 // The Swift Programming Language
 // https://docs.swift.org/swift-book
+import Foundation
+
 public struct Card: Codable {
   public var question: String
   public var answer: String
@@ -13,9 +15,10 @@ public struct Card: Codable {
 public struct User: Codable {
   public var username: String
   public var password: String
-  public var id: String
+  // public var id: String
+  public var id: UUID
 
-  public init(username: String, password: String, id: String) {
+  public init(username: String, password: String, id: UUID) {
     self.username = username
     self.password = password
     self.id = id

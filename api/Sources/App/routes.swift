@@ -21,6 +21,7 @@ func routes(_ app: Application) throws {
   app.get("cards", ":id") { req in
     let id = req.parameters.get("id")!
     // convert whole app to use UUID's later
+    // for all that, I still need the type cast...........
     let userRows = try await client
       .execute(raw: "SELECT * FROM users WHERE id = \(bind: id)::UUID")
 
@@ -65,11 +66,6 @@ func routes(_ app: Application) throws {
     throw Abort(.badRequest)
   }
 }
-
-// struct UserJson: Content {
-// var name: String
-// var password: String
-// }
 
 extension User: Content {}
 extension Card: Content {}

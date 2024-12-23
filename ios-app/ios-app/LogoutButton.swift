@@ -8,7 +8,7 @@
 import SwiftUI
 
 struct LogoutButton: View {
-  @Binding var userID: String?
+  @Binding var userID: UUID?
 
   var body: some View {
     Button("Log Out") {

@@ -24,7 +24,7 @@ func getDataResult<T: Codable>(_ t: T.Type, url: URL) async -> Result<T, Error> 
   }
 }
 
-func login(username: String, password: String) async -> Result<String, LoginError> {
+func login(username: String, password: String) async -> Result<UUID, LoginError> {
   var request = URLRequest(url: .api(path: "/login"))
   request.httpMethod = "POST"
   request.addValue("application/json", forHTTPHeaderField: "Content-Type")
@@ -41,7 +41,7 @@ func login(username: String, password: String) async -> Result<String, LoginErro
     let (data, _) = try await URLSession.shared.data(for: request)
     do {
       let user = try JSONDecoder().decode(User.self, from: data)
-      UserDefaults.standard.set(user.id, forKey: .userIdKey)
+        UserDefaults.standard.set(user.id.uuidString, forKey: .userIdKey) // this is the problem line
       return .success(user.id)
     } catch {
       return .failure(.jsonDecodeError)

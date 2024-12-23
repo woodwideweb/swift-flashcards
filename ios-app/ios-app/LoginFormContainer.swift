@@ -7,9 +7,10 @@
 
 import Models
 import SwiftUI
+import Foundation
 
 struct LoginFormContainer: View {
-  @Binding var userID: String?
+  @Binding var userID: UUID?
 
   var body: some View {
     LoginForm { username, password in
