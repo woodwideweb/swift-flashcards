@@ -28,25 +28,11 @@ struct ContentView: View {
 
     if userID != nil {
       VStack {
-        CardViewer(state: state)
-          .padding()
+        CardLogic(userID: $userID)
         LogoutButton(userID: $userID)
-      }
-      .task {
-        try? await self.getCards(id: userID!)
       }
     } else {
       LoginFormContainer(userID: $userID)
-    }
-  }
-
-  func getCards(id: UUID) async throws {
-    let cardResult = await getDataResult([Card].self, url: URL.api(path: "/cards/\(id)"))
-    switch cardResult {
-    case .success(let cards):
-      state = .loaded(cards)
-    case .failure:
-      state = .failed
     }
   }
 }
