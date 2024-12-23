@@ -6,7 +6,7 @@
 //
 
 import Models
-import SwiftUI
+
 
 enum ViewState {
   case loading
@@ -51,28 +51,4 @@ struct ContentView: View {
 
 #Preview {
   ContentView()
-}
-
-extension URL {
-  static func api(path: String) -> URL {
-    return URL(string: "http://127.0.0.1:8080\(path)")!
-  }
-}
-
-func getData<T: Codable>(_ t: T.Type, url: URL) async throws -> T {
-  let (data, _) = try await URLSession.shared.data(from: url)
-  let decoder = JSONDecoder()
-  let decodedData = try decoder.decode(t, from: data)
-  return decodedData
-}
-
-func getDataResult<T: Codable>(_ t: T.Type, url: URL) async -> Result<T, Error> {
-  do {
-    let (data, _) = try await URLSession.shared.data(from: url)
-    let decoder = JSONDecoder()
-    let decodedData = try decoder.decode(t, from: data)
-    return .success(decodedData)
-  } catch {
-    return .failure(error)
-  }
 }

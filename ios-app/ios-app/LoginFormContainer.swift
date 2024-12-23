@@ -32,33 +32,6 @@ struct LoginFormContainer: View {
   }
 }
 
-func login(username: String, password: String) async -> Result<String, LoginError> {
-  var request = URLRequest(url: .api(path: "/login"))
-  request.httpMethod = "POST"
-  request.addValue("application/json", forHTTPHeaderField: "Content-Type")
-  let userJson = UserJson(name: username, password: password)
-
-  do {
-    let json = try JSONEncoder().encode(userJson)
-    request.httpBody = json
-  } catch {
-    return .failure(.jsonEncodeError)
-  }
-
-  do {
-    let (data, _) = try await URLSession.shared.data(for: request)
-    do {
-      let user = try JSONDecoder().decode(User.self, from: data)
-      UserDefaults.standard.set(user.id, forKey: .userIdKey)
-      return .success(user.id)
-    } catch {
-      return .failure(.jsonDecodeError)
-    }
-  } catch {
-    return .failure(.networkError)
-  }
-}
-
 enum LoginError: Error {
   case jsonEncodeError
   case networkError
