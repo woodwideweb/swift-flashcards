@@ -72,3 +72,5 @@ enum LoginError: Error {
     case networkError
     case jsonDecodeError
 }
+
+

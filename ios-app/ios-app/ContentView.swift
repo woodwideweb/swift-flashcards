@@ -20,7 +20,8 @@ extension String {
 
 struct ContentView: View {
     @State private var state: ViewState = .loading
-    @State private var userID: String? = UserDefaults.standard.string(forKey: .userIdKey)
+//    @State private var userID = UserDefaults.standard.string(forKey: .userIdKey)
+    @AppStorage(.userIdKey) private var userID: String?
     
     var body: some View {
        
@@ -31,7 +32,7 @@ struct ContentView: View {
                 LogoutButton(userID: $userID)
             }
             .task {
-                await self.getCards()
+                try? await self.getCards(id: userID!)
                 
 //                doNotDoThisInRealLife()
             }
@@ -40,8 +41,8 @@ struct ContentView: View {
         }
     }
     
-    func getCards() async {
-        let cardResult = await getDataResult([Card].self, url: URL.api(path: "/cards"))
+    func getCards(id: String) async throws {
+        let cardResult = await getDataResult([Card].self, url: URL.api(path: "/cards/\(id)"))
         switch cardResult {
             case .success(let cards):
                 self.state = .loaded(cards)
@@ -53,10 +54,6 @@ struct ContentView: View {
 
 #Preview {
     ContentView()
-}
-
-func doNotDoThisInRealLife() -> Void {
-    UserDefaults.standard.removeObject(forKey: .userIdKey)
 }
 
 extension URL {
@@ -72,11 +69,6 @@ func getData<T: Codable>(_ t: T.Type, url: URL) async throws -> T {
     return decodedData
 }
 
-enum MyResult<T, E: Error> {
-    case success(T)
-    case failure(E)
-}
-
 func getDataResult<T: Codable>(_ t: T.Type, url: URL) async -> Result<T, Error> {
     do {
         let (data, _) = try await URLSession.shared.data(from: url)
@@ -89,3 +81,6 @@ func getDataResult<T: Codable>(_ t: T.Type, url: URL) async -> Result<T, Error> 
     
 }
 
+struct UserDataCard: Codable {
+  var id: String
+}

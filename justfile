@@ -1,3 +1,6 @@
+_default:
+  @just --choose
+
 [private]
 watch-swift dir cmd ignore1="•" ignore2="•" ignore3="•":
   @watchexec --project-origin . --clear --restart --watch {{dir}} --exts swift \

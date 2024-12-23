@@ -9,25 +9,16 @@ import SwiftUI
 
 struct LogoutButton: View {
     @Binding var userID: String?
+    
     var body: some View {
         Button("Log Out") {
-            Task {
-              logout()
-            }
+            self.userID = nil
         }
         .font(.title3)
     }
     
-    func logout() -> Void {
-        self.userID = nil
-    }
 }
 
 //#Preview {
 //    LogoutButton()
 //}
-
-//func logout() -> Void {
-//    UserDefaults.standard.removeObject(forKey: .userIdKey)
-//}
-

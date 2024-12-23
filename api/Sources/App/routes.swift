@@ -18,8 +18,26 @@ func routes(_ app: Application) throws {
     numberOfThreads: 1
   )
 
-  app.get("cards") { req in
-    let rows = try await client.execute(raw: "SELECT front AS question, back AS answer FROM cards")
+  app.get("cards", ":id") { req in
+    let id = req.parameters.get("id")!
+    // convert whole app to use UUID's later
+    let userRows = try await client
+      .execute(raw: "SELECT * FROM users WHERE id = \(bind: id)::UUID")
+
+    guard userRows.count == 1 else {
+      throw Abort(.unauthorized)
+    }
+
+    let user = try userRows[0].decode(
+      model: User.self,
+      prefix: nil,
+      keyDecodingStrategy: .convertFromSnakeCase
+    )
+
+    let rows = try await client
+      .execute(
+        raw: "SELECT front AS question, back AS answer FROM cards WHERE user_id = \(bind: user.id)::UUID"
+      )
     return try rows.map { row in
       try row.decode(model: Card.self, prefix: nil, keyDecodingStrategy: .convertFromSnakeCase)
     }
@@ -53,15 +71,9 @@ struct UserJson: Content {
   var password: String
 }
 
+struct UserDataCard: Content {
+  var id: String
+}
+
 extension User: Content {}
 extension Card: Content {}
-
-let cards = [Card(question: "hola", answer: "hello"), Card(question: "adios", answer: "goodbye")]
-
-let users = [User(username: "bob", password: "hello123", id: UUID().uuidString)]
-
-struct ThingsRow: Codable {
-  let textField: String
-  let id: UUID
-  let createdAt: Date
-}
