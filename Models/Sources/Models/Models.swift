@@ -15,7 +15,6 @@ public struct Card: Codable {
 public struct User: Codable {
   public var username: String
   public var password: String
-  // public var id: String
   public var id: UUID
 
   public init(username: String, password: String, id: UUID) {
@@ -25,6 +24,7 @@ public struct User: Codable {
   }
 }
 
+// rename to LoginInput
 public struct UserJson: Codable {
   public var name: String
   public var password: String

@@ -41,8 +41,6 @@ struct ContentView: View {
   ContentView()
 }
 
-// this is something I got off StackOverflow to make an error go away
-// I have no idea what it's doing or what this protocol is
 extension UUID: RawRepresentable {
     public var rawValue: String {
         self.uuidString

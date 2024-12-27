@@ -1,6 +1,18 @@
 import Models
 import Vapor
 
+extension Parameters {
+  func requireUUID(_ key: String) throws -> UUID {
+    guard let idString = get(key) else {
+      throw Abort(.unauthorized)
+    }
+    guard let uuid = UUID(uuidString: idString) else {
+      throw Abort(.unauthorized)
+    }
+    return uuid
+  }
+}
+
 func routes(_ app: Application) throws {
   app.get { req async in
     "It works!"
@@ -19,11 +31,10 @@ func routes(_ app: Application) throws {
   )
 
   app.get("cards", ":id") { req in
-    let id = req.parameters.get("id")!
-    // convert whole app to use UUID's later
-    // for all that, I still need the type cast...........
+    let id = try req.parameters.requireUUID("id")
+
     let userRows = try await client
-      .execute(raw: "SELECT * FROM users WHERE id = \(bind: id)::UUID")
+      .execute(raw: "SELECT * FROM users WHERE id = \(bind: id)")
 
     guard userRows.count == 1 else {
       throw Abort(.unauthorized)
@@ -37,7 +48,7 @@ func routes(_ app: Application) throws {
 
     let rows = try await client
       .execute(
-        raw: "SELECT front AS question, back AS answer FROM cards WHERE user_id = \(bind: user.id)::UUID"
+        raw: "SELECT front AS question, back AS answer FROM cards WHERE user_id = \(bind: user.id)"
       )
     return try rows.map { row in
       try row.decode(model: Card.self, prefix: nil, keyDecodingStrategy: .convertFromSnakeCase)
