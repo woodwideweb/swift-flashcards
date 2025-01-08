@@ -38,6 +38,15 @@ public struct PgClient {
     try await db.raw(raw).all()
   }
 
+  // I don't know if this is what you meant by an abstraction,
+  // but it makes less duplication in routes.swift
+  public func query<T: Codable>(raw: SQLQueryString, decodeTo: T.Type) async throws -> [T] {
+    let rows = try await execute(raw: raw)
+    return try rows.map { row in
+      try row.decode(model: decodeTo, prefix: nil, keyDecodingStrategy: .convertFromSnakeCase)
+    }
+  }
+
   private let _shutdownHelper: ShutdownHelper
 }
 
