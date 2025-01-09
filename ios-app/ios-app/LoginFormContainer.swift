@@ -33,8 +33,4 @@ struct LoginFormContainer: View {
   }
 }
 
-enum LoginError: Error {
-  case jsonEncodeError
-  case networkError
-  case jsonDecodeError
-}
+
