@@ -28,7 +28,7 @@ func login(username: String, password: String) async -> Result<UUID, LoginError>
   var request = URLRequest(url: .api(path: "/login"))
   request.httpMethod = "POST"
   request.addValue("application/json", forHTTPHeaderField: "Content-Type")
-  let userJson = UserJson(name: username, password: password)
+  let userJson = LoginInput(name: username, password: password)
 
   do {
     let json = try JSONEncoder().encode(userJson)

@@ -25,7 +25,7 @@ public struct User: Codable {
 }
 
 // rename to LoginInput
-public struct UserJson: Codable {
+public struct LoginInput: Codable {
   public var name: String
   public var password: String
 

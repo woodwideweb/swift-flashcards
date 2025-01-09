@@ -50,7 +50,7 @@ func routes(_ app: Application) throws {
   }
 
   app.post("login") { req -> User in
-    let input = try req.content.decode(UserJson.self)
+    let input = try req.content.decode(LoginInput.self)
 
     let rows = try await client.query(
       raw: "SELECT * FROM users WHERE username = \(bind: input.name)",
@@ -71,4 +71,4 @@ func routes(_ app: Application) throws {
 
 extension User: Content {}
 extension Card: Content {}
-extension UserJson: Content {}
+extension LoginInput: Content {}
