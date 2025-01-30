@@ -14,20 +14,20 @@ struct CreateCardForm: View {
   @Binding var showCreateCard: Bool
   var userId: UUID
   var onNewCard: (Card) -> Void
-  
+
   var body: some View {
     Text("Create a card")
       .font(.title2)
-    
+
     Form {
       TextField(text: $front, prompt: Text("Front")) {
         Text("Front")
       }
-      
+
       TextField(text: $back, prompt: Text("Back")) {
         Text("Back")
       }
-      
+
       Button("Create") {
         Task {
           let cardResult = await post(
@@ -44,7 +44,7 @@ struct CreateCardForm: View {
         }
       }
     }
-    
+
     Button("Back to cards") {
       showCreateCard = false
     }
@@ -55,11 +55,5 @@ struct CreateCardForm: View {
   CreateCardForm(
     showCreateCard: .constant(true),
     userId: UUID(uuidString: "9d307d61-246e-48c2-8b77-a67154b586f6")!
-  ) {_ in }
-}
-
-struct CreateCardInput: Codable {
-  var front: String
-  var back: String
-  var userId: UUID
+  ) { _ in }
 }

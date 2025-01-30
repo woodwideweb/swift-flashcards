@@ -5,9 +5,9 @@
 //  Created by Tabitha on 11/7/24.
 //
 
+import Foundation
 import Models
 import SwiftUI
-import Foundation
 
 struct LoginFormContainer: View {
   @Binding var userID: UUID?
@@ -32,5 +32,3 @@ struct LoginFormContainer: View {
     }
   }
 }
-
-

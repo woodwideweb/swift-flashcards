@@ -92,9 +92,4 @@ func routes(_ app: Application) throws {
 extension User: Content {}
 extension Card: Content {}
 extension LoginInput: Content {}
-
-struct CreateCardInput: Content {
-  var front: String
-  var back: String
-  var userId: UUID
-}
+extension CreateCardInput: Content {}

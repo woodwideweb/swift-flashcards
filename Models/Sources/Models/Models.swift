@@ -24,7 +24,6 @@ public struct User: Codable, Equatable {
   }
 }
 
-// rename to LoginInput
 public struct LoginInput: Codable, Equatable {
   public var name: String
   public var password: String
@@ -32,5 +31,17 @@ public struct LoginInput: Codable, Equatable {
   public init(name: String, password: String) {
     self.name = name
     self.password = password
+  }
+}
+
+public struct CreateCardInput: Codable {
+  public var front: String
+  public var back: String
+  public var userId: UUID
+
+  public init(front: String, back: String, userId: UUID) {
+    self.front = front
+    self.back = back
+    self.userId = userId
   }
 }

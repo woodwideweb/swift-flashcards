@@ -17,17 +17,15 @@ enum ViewState: Equatable {
 
 extension String {
   static let userIdKey = "UserID"
-    
 }
 
 struct ContentView: View {
-  //  @State private var state: ViewState = .loading
   @State var state: ViewState = .loading
   @State private var showCreateCard = false
   @AppStorage(.userIdKey) private var userID: UUID?
-  
+
   var body: some View {
-    
+
     if userID != nil {
       VStack {
         if showCreateCard == false {
@@ -39,13 +37,12 @@ struct ContentView: View {
           .font(.title3)
         } else {
           CreateCardForm(showCreateCard: $showCreateCard, userId: userID!) { card in
-            if case var .loaded(cards) = state {
+            if case .loaded(var cards) = state {
               cards.append(card)
               print("added card")
               state = .loaded(cards)
             }
           }
-          
         }
       }
     } else {
@@ -62,9 +59,9 @@ extension UUID: RawRepresentable {
   public var rawValue: String {
     uuidString
   }
-  
+
   public typealias RawValue = String
-  
+
   public init?(rawValue: RawValue) {
     self.init(uuidString: rawValue)
   }

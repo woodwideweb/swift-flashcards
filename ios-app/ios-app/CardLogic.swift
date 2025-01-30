@@ -12,7 +12,7 @@ struct CardLogic: View {
   //  @State var state: ViewState = .loading
   @Binding var userID: UUID?
   @Binding var state: ViewState
-  
+
   var body: some View {
     CardLoader(state: state)
       .padding()
@@ -22,7 +22,7 @@ struct CardLogic: View {
         }
       }
   }
-  
+
   func getCards(id: UUID) async throws {
     print("go get the cards")
     let cardResult = await getDataResult([Card].self, url: URL.api(path: "/cards/\(id)"))
@@ -36,5 +36,8 @@ struct CardLogic: View {
 }
 
 #Preview {
-  CardLogic(userID: .constant(UUID(uuidString: "9d307d61-246e-48c2-8b77-a67154b586f6")), state: .constant(.loading))
+  CardLogic(
+    userID: .constant(UUID(uuidString: "9d307d61-246e-48c2-8b77-a67154b586f6")),
+    state: .constant(.loading)
+  )
 }
