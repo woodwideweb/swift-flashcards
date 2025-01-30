@@ -40,6 +40,22 @@ struct CardViewer: View {
           .disabled(index == cards.count - 1)
       }
     }
+    .gesture(
+      DragGesture()
+        .onEnded { gesture in
+          withAnimation {
+            if gesture.translation.width > 50 {
+              if index < cards.count - 1 {
+                index += 1
+              }
+            } else if gesture.translation.width < -50 {
+              if index > 0 {
+                index -= 1
+              }
+            }
+          }
+        }
+    )
   }
 }
 

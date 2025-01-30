@@ -39,7 +39,7 @@ struct ContentView: View {
           CreateCardForm(showCreateCard: $showCreateCard, userId: userID!) { card in
             if case .loaded(var cards) = state {
               cards.append(card)
-              print("added card")
+//              print("added card")
               state = .loaded(cards)
             }
           }
