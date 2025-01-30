@@ -2,29 +2,51 @@
 //  CardViewer.swift
 //  ios-app
 //
-//  Created by Tabitha on 11/7/24.
+//  Created by Tabitha on 1/9/25.
 //
 
 import Models
 import SwiftUI
 
 struct CardViewer: View {
+  @State var index = 0
+  var cards: [Card]
 
-  var state: ViewState
+  var current: Card {
+    cards[index]
+  }
 
   var body: some View {
     VStack {
-      switch self.state {
-      case .loading:
-        ProgressView()
-      case .failed:
-        Text("Something went wrong. No cards to display")
+      CardDisplay(front: current.question, back: current.answer)
+        .padding(.bottom, 30)
+        .padding(.top, 70)
 
-      case .loaded(let cards):
-        ForEach(cards, id: \.question) { card in
-          CardDisplay(front: card.question, back: card.answer)
-        }
+      HStack {
+        Button { index -= 1 }
+                label: {
+            Image(systemName: "arrow.left.circle")
+              .resizable()
+              .frame(width: 30, height: 30)
+          }
+          .disabled(index == 0)
+
+        Button { index += 1 }
+                    label: {
+            Image(systemName: "arrow.right.circle")
+              .resizable()
+              .frame(width: 30, height: 30)
+          }
+          .disabled(index == cards.count - 1)
       }
     }
   }
+}
+
+#Preview {
+  CardViewer(cards: [
+    Card(question: "hello", answer: "hola"),
+    Card(question: "goodbye", answer: "adios"),
+    Card(question: "gracias", answer: "thank you"),
+  ])
 }

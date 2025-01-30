@@ -2,7 +2,7 @@
 // https://docs.swift.org/swift-book
 import Foundation
 
-public struct Card: Codable {
+public struct Card: Codable, Equatable {
   public var question: String
   public var answer: String
 
@@ -12,7 +12,7 @@ public struct Card: Codable {
   }
 }
 
-public struct User: Codable {
+public struct User: Codable, Equatable {
   public var username: String
   public var password: String
   public var id: UUID
@@ -25,7 +25,7 @@ public struct User: Codable {
 }
 
 // rename to LoginInput
-public struct LoginInput: Codable {
+public struct LoginInput: Codable, Equatable {
   public var name: String
   public var password: String
 

@@ -18,4 +18,4 @@ CREATE TABLE cards (
 
 INSERT INTO users (id, username, password, created_at) VALUES ('9d307d61-246e-48c2-8b77-a67154b586f6', 'bob', 'hello123', NOW());
 
-INSERT INTO cards (id, front, back, created_at, user_id) VALUES ('6891b5a6-18d4-4297-9d8d-d89d8f9f8b4f', 'hola', 'hello', NOW(), '9d307d61-246e-48c2-8b77-a67154b586f6');
+INSERT INTO cards (id, front, back, created_at, user_id) VALUES ('6891b5a6-18d4-4297-9d8d-d89d8f9f8b4f', 'hola', 'hello', NOW(), '9d307d61-246e-48c2-8b77-a67154b586f6'), ('c360f885-f1e0-4bdb-ad60-d6f3feece607', 'adios', 'goodbye', NOW(), '9d307d61-246e-48c2-8b77-a67154b586f6');

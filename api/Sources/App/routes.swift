@@ -67,8 +67,34 @@ func routes(_ app: Application) throws {
 
     throw Abort(.badRequest)
   }
+
+  app.post("cards") { req in
+    let input = try req.content.decode(CreateCardInput.self)
+
+    do {
+      _ = try await client.execute(raw: """
+        INSERT INTO cards (id, front, back, created_at, user_id)
+        VALUES (\(bind: UUID()), \(bind: input.front), \(bind: input.back), NOW(), \(
+          bind: input
+            .userId
+      ))
+      """)
+    } catch {
+      print(String(reflecting: error))
+      throw Abort(.badRequest)
+    }
+
+    let cardJson = try JSONEncoder().encode(Card(question: input.front, answer: input.back))
+    return Response(status: .created, body: Response.Body(data: cardJson))
+  }
 }
 
 extension User: Content {}
 extension Card: Content {}
 extension LoginInput: Content {}
+
+struct CreateCardInput: Content {
+  var front: String
+  var back: String
+  var userId: UUID
+}

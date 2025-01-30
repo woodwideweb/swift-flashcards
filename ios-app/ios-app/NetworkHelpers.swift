@@ -4,8 +4,8 @@
 //
 //  Created by Tabitha on 12/23/24.
 //
-import SwiftUI
 import Models
+import SwiftUI
 
 extension URL {
   static func api(path: String) -> URL {
@@ -25,15 +25,19 @@ func getDataResult<T: Codable>(_ t: T.Type, url: URL) async -> Result<T, Error> 
 }
 
 func login(username: String, password: String) async -> Result<UUID, NetworkError> {
-    let userResult = await post(to: .api(path: "/login"), data: LoginInput(name: username, password: password), decodeTo: User.self)
-    
-    switch userResult {
-    case .success(let user):
-        UserDefaults.standard.set(user.id.uuidString, forKey: .userIdKey)
-        return .success(user.id)
-    case .failure(let error):
-        return.failure(error)
-    }
+  let userResult = await post(
+    to: .api(path: "/login"),
+    body: LoginInput(name: username, password: password),
+    decodeTo: User.self
+  )
+
+  switch userResult {
+  case .success(let user):
+    UserDefaults.standard.set(user.id.uuidString, forKey: .userIdKey)
+    return .success(user.id)
+  case .failure(let error):
+    return .failure(error)
+  }
 }
 
 enum NetworkError: Error {
@@ -42,27 +46,31 @@ enum NetworkError: Error {
   case jsonDecodeError
 }
 
-func post<Input: Codable, Response: Codable>(to url: URL, data: Input, decodeTo: Response.Type) async -> Result<Response, NetworkError> {
-    var request = URLRequest(url: url)
-    request.httpMethod = "POST"
-    request.addValue("application/json", forHTTPHeaderField: "Content-Type")
-    
+func post<Input: Encodable, Response: Decodable>(
+  to url: URL,
+  body: Input,
+  decodeTo: Response.Type
+) async -> Result<Response, NetworkError> {
+  var request = URLRequest(url: url)
+  request.httpMethod = "POST"
+  request.addValue("application/json", forHTTPHeaderField: "Content-Type")
+
+  do {
+    let json = try JSONEncoder().encode(body)
+    request.httpBody = json
+  } catch {
+    return .failure(.jsonEncodeError)
+  }
+
+  do {
+    let (data, _) = try await URLSession.shared.data(for: request)
     do {
-        let json = try JSONEncoder().encode(data)
-        request.httpBody = json
+      let decodedData = try JSONDecoder().decode(decodeTo, from: data)
+      return .success(decodedData)
     } catch {
-        return .failure(.jsonEncodeError)
+      return .failure(.jsonDecodeError)
     }
-    
-    do {
-        let (data, _) = try await URLSession.shared.data(for: request)
-        do {
-            let decodedData = try JSONDecoder().decode(decodeTo, from: data)
-            return .success(decodedData)
-        } catch {
-            return .failure(.jsonDecodeError)
-        }
-    } catch {
-        return .failure(.networkError)
-    }
+  } catch {
+    return .failure(.networkError)
+  }
 }
