@@ -13,13 +13,15 @@ extension URL {
   }
 }
 
-func getDataResult<T: Codable>(_ t: T.Type, url: URL) async -> Result<T, Error> {
+func getDataResult<T: Codable>(_ t: T.Type, url: URL, userId: UUID) async -> Result<T, Error> {
   var data = Data()
   do {
-//    print("before request")
-    (data, _) = try await URLSession.shared.data(from: url)
-    print(String(data: data, encoding: .utf8)!)
-//    print("after request")
+    var request = URLRequest(url: url)
+    request.setValue("\(userId)", forHTTPHeaderField: "Authorization")
+    // change call to for: request
+//    (data, _) = try await URLSession.shared.data(from: url)
+    (data, _) = try await URLSession.shared.data(for: request)
+//    print(String(data: data, encoding: .utf8)!)
     let decoder = JSONDecoder()
     let decodedData = try decoder.decode(t, from: data)
     return .success(decodedData)

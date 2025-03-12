@@ -67,13 +67,12 @@ struct ContentView: View {
   }
 
   func getCards(id: UUID) async throws {
-//    print("go get the cards")
-    let deckResult = await getDataResult([Deck].self, url: URL.api(path: "/decks/\(id)"))
+    let deckResult = await getDataResult([Deck].self, url: URL.api(path: "/decks"), userId: id)
     switch deckResult {
     case .success([]):
       // change this...
       state = .failed
-    case .success(var decks):
+    case .success(let decks):
       // fix this
       state = .loaded(.init(decks)!)
     case .failure:
@@ -83,6 +82,5 @@ struct ContentView: View {
 }
 
 #Preview {
-  ContentView(
-  )
+  ContentView()
 }

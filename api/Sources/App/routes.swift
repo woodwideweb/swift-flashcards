@@ -1,15 +1,25 @@
 import Models
 import Vapor
 
-extension Parameters {
-  func requireUUID(_ key: String) throws -> UUID {
-    guard let idString = get(key) else {
-      throw Abort(.unauthorized)
+// extension Parameters {
+//   func requireUUID(_ key: String) throws -> UUID {
+//     guard let idString = get(key) else {
+//       throw Abort(.unauthorized)
+//     }
+//     guard let uuid = UUID(uuidString: idString) else {
+//       throw Abort(.unauthorized)
+//     }
+//     return uuid
+//   }
+// }
+
+extension Request {
+  func requireUserId() async throws -> UUID {
+    guard let header = headers.first(name: .authorization),
+          let userId = UUID(uuidString: header) else {
+      throw Abort(.badRequest)
     }
-    guard let uuid = UUID(uuidString: idString) else {
-      throw Abort(.unauthorized)
-    }
-    return uuid
+    return userId
   }
 }
 
@@ -30,8 +40,9 @@ func routes(_ app: Application) throws {
     "It works!"
   }
 
-  app.get("decks", ":id") { req in
-    let id = try req.parameters.requireUUID("id")
+  // app.get("decks", ":id") { req in
+  app.get("decks") { req in
+    let id = try await req.requireUserId()
 
     let userRows = try await client.query(
       raw: "SELECT * FROM users WHERE id = \(bind: id)",
