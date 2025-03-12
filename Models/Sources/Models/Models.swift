@@ -39,13 +39,13 @@ public struct LoginInput: Codable, Equatable {
 public struct CreateCardInput: Codable {
   public var front: String
   public var back: String
-  public var userId: UUID
+  // public var userId: UUID
   public var deckId: UUID
 
-  public init(front: String, back: String, userId: UUID, deckId: UUID) {
+  public init(front: String, back: String, deckId: UUID) {
     self.front = front
     self.back = back
-    self.userId = userId
+    // self.userId = userId
     self.deckId = deckId
   }
 }

@@ -1,88 +1,73 @@
 //
-//  CardLogic.swift
+//  ContentView.swift
 //  ios-app
 //
-//  Created by Tabitha on 12/23/24.
+//  Created by Tabitha on 9/26/24.
 //
-// Loads decks and controls whether the state shown is loading, failure, or loaded. Makes API calls
 
+import Foundation
 import Models
 import SwiftUI
 import NonEmpty
 
-enum ViewState: Equatable {
-  case loading
-  case loaded(NonEmpty<[Deck]>)
-  case failed
+extension String {
+  static let userIdKey = "UserID"
 }
 
 struct CardsLoader: View {
-  @AppStorage(.userIdKey) private var userId: UUID?
-  @State var state: ViewState = .loading
-  @State var currentDeck: UUID?
-  @State var showCreateCard = false
-
+  
+  var decks: NonEmpty<[Deck]>
+  @State var currentDeckIndex: Int = 0
+  var userId: UUID
+  @Binding var showCreateCard: Bool
+  var onShuffle: (Int) -> Void
+  
+  var currentDeck: Deck { decks[currentDeckIndex] }
+  
   var body: some View {
-    if userId != nil {
+
       VStack {
-        switch self.state {
-        case .loading:
-          ProgressView()
-        case .failed:
-          Text("Something went wrong. No cards to display")
+          CardsViewer(cards: currentDeck.cards)
+
+          LogoutButton() {}
+
+          Button("New Card") {
+            showCreateCard = true
+          }
+          .font(.title3)
+
+          Button("Shuffle cards") {
+//            var cards = currentDeck.cards
+//            cards.shuffle()
+            // How do I make this code work?
+//            currentDeck.cards = cards
+            // pass this function from the parent view
+            // and it will need the current deck index
+            onShuffle(currentDeckIndex)
+          }
+          .font(.title3)
           
-        case .loaded(var decks):
-          // we need typesafety
-          if !decks.isEmpty {
-            if !showCreateCard {
-              ContentView(decks: decks, userId: userId!, showCreateCard: $showCreateCard) { deckIndex in
-                var cards = decks[deckIndex].cards
-                cards.shuffle()
-                decks[deckIndex].cards = cards
-                state = .loaded(decks)
-              }
-            } else {
-              CreateCardForm(showCreateCard: $showCreateCard, userId: userId!, decks: decks) {card, id in
-                var deck = decks.first(where: { $0.id == id })!
-                let index = decks.firstIndex(where: { $0.id == id })!
-                deck.cards.append(card)
-                decks[index] = deck
-                state = .loaded(decks)
-              }
+          Picker("Deck", selection: $currentDeckIndex) {
+            ForEach(Array(decks.enumerated()), id: \.offset) { index, deck in
+              Text(deck.name).tag(index as Int?)
             }
-          } else {
-            Text("no decks")
           }
         }
       }
-      .padding()
-      .task {
-        if state == .loading {
-          try? await self.getCards(id: userId!)
-        }
-      }
-    } else {
-      LoginFormContainer(userId: $userId)
-    }
   }
-
-  func getCards(id: UUID) async throws {
-//    print("go get the cards")
-    let deckResult = await getDataResult([Deck].self, url: URL.api(path: "/decks/\(id)"))
-    switch deckResult {
-    case .success([]):
-      // change this...
-      state = .failed
-    case .success(var decks):
-      // fix this
-      state = .loaded(.init(decks)!)
-    case .failure:
-      state = .failed
-    }
-  }
-}
 
 #Preview {
-  CardsLoader(
-  )
+  CardsLoader(decks: [Deck(name: "something", id: UUID(), cards: [Card(question: "hola", answer: "hello")])], userId: UUID(), showCreateCard: .constant(false)) {_ in }
+}
+
+extension UUID: RawRepresentable {
+  public var rawValue: String {
+    uuidString
+  }
+
+  public typealias RawValue = String
+
+  public init?(rawValue: RawValue) {
+    self.init(uuidString: rawValue)
+  }
 }

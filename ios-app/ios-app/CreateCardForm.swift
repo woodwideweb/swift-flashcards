@@ -43,7 +43,7 @@ struct CreateCardForm: View {
         Task {
           let cardResult = await post(
             to: .api(path: "/cards"),
-            body: CreateCardInput(front: front, back: back, userId: userId, deckId: deckSelection!),
+            body: CreateCardInput(front: front, back: back, deckId: deckSelection!),
             decodeTo: Card.self
           )
           switch cardResult {

@@ -13,7 +13,7 @@ struct ios_appApp: App {
     WindowGroup {
 
 //      ContentView()
-      CardsLoader()
+      ContentView()
     }
   }
 }

@@ -30,33 +30,6 @@ func routes(_ app: Application) throws {
     "It works!"
   }
 
-  app.get("cards", ":id") { req in
-    let id = try req.parameters.requireUUID("id")
-
-    let userRows = try await client.query(
-      raw: "SELECT * FROM users WHERE id = \(bind: id)",
-      decodeTo: User.self
-    )
-
-    guard userRows.count == 1 else {
-      throw Abort(.unauthorized)
-    }
-    let user = userRows[0]
-
-    // let rows = try await client
-    //   .execute(
-    //     raw: "SELECT front AS question, back AS answer FROM cards WHERE user_id = \(bind: user.id)"
-    //   )
-    return try await client.query(
-      raw: """
-      SELECT cards.front AS question, cards.back AS answer, decks.name AS deck FROM cards 
-      JOIN decks ON cards.deck_id = decks.id
-      WHERE cards.user_id = \(bind: user.id)
-      """,
-      decodeTo: Card.self
-    )
-  }
-
   app.get("decks", ":id") { req in
     let id = try req.parameters.requireUUID("id")
 
@@ -125,9 +98,9 @@ func routes(_ app: Application) throws {
 
     do {
       _ = try await client.execute(raw: """
-        INSERT INTO cards (id, front, back, created_at, user_id, deck_id)
+        INSERT INTO cards (id, front, back, created_at, deck_id)
         VALUES (\(bind: UUID()), \(bind: input.front), \(bind: input.back), NOW(),
-         \(bind: input.userId), \(bind: input.deckId))
+         \(bind: input.deckId))
       """)
     } catch {
       print(String(reflecting: error))
