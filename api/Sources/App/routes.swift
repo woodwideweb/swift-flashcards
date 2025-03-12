@@ -43,10 +43,62 @@ func routes(_ app: Application) throws {
     }
     let user = userRows[0]
 
+    // let rows = try await client
+    //   .execute(
+    //     raw: "SELECT front AS question, back AS answer FROM cards WHERE user_id = \(bind: user.id)"
+    //   )
     return try await client.query(
-      raw: "SELECT front AS question, back AS answer FROM cards WHERE user_id = \(bind: user.id)",
+      raw: """
+      SELECT cards.front AS question, cards.back AS answer, decks.name AS deck FROM cards 
+      JOIN decks ON cards.deck_id = decks.id
+      WHERE cards.user_id = \(bind: user.id)
+      """,
       decodeTo: Card.self
     )
+  }
+
+  app.get("decks", ":id") { req in
+    let id = try req.parameters.requireUUID("id")
+
+    let userRows = try await client.query(
+      raw: "SELECT * FROM users WHERE id = \(bind: id)",
+      decodeTo: User.self
+    )
+
+    guard userRows.count == 1 else {
+      throw Abort(.unauthorized)
+    }
+    let user = userRows[0]
+
+    let deckCardsJoin = try await client.query(raw: """
+    SELECT name, decks.id AS id, cards.front AS question, cards.back AS answer
+    FROM decks JOIN cards ON decks.id = cards.deck_id 
+    WHERE decks.user_id = \(bind: user.id); 
+    """, decodeTo: DeckJoin.self)
+    print(deckCardsJoin)
+
+    var decks: [Deck] = []
+
+    for row in deckCardsJoin {
+      let index = decks.firstIndex(where: { $0.id == row.id })
+
+      // if the deck has already been found, append to it
+      if let index {
+        decks[index].cards.append(Card(question: row.question, answer: row.answer))
+      } else {
+        // if the deck hasn't been seen yet, make a new one
+        let newDeck = Deck(
+          name: row.name,
+          id: row.id,
+          cards: [Card(question: row.question, answer: row.answer)]
+        )
+        decks.append(newDeck)
+      }
+    }
+
+    print(decks)
+
+    return decks
   }
 
   app.post("login") { req -> User in
@@ -73,23 +125,30 @@ func routes(_ app: Application) throws {
 
     do {
       _ = try await client.execute(raw: """
-        INSERT INTO cards (id, front, back, created_at, user_id)
-        VALUES (\(bind: UUID()), \(bind: input.front), \(bind: input.back), NOW(), \(
-          bind: input
-            .userId
-      ))
+        INSERT INTO cards (id, front, back, created_at, user_id, deck_id)
+        VALUES (\(bind: UUID()), \(bind: input.front), \(bind: input.back), NOW(),
+         \(bind: input.userId), \(bind: input.deckId))
       """)
     } catch {
       print(String(reflecting: error))
       throw Abort(.badRequest)
     }
 
-    let cardJson = try JSONEncoder().encode(Card(question: input.front, answer: input.back))
+    let cardJson = try JSONEncoder()
+      .encode(Card(question: input.front, answer: input.back))
     return Response(status: .created, body: Response.Body(data: cardJson))
   }
 }
 
 extension User: Content {}
 extension Card: Content {}
+extension Deck: Content {}
 extension LoginInput: Content {}
 extension CreateCardInput: Content {}
+
+struct DeckJoin: Codable {
+  var name: String
+  var id: UUID
+  var question: String
+  var answer: String
+}

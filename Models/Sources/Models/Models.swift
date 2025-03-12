@@ -5,10 +5,12 @@ import Foundation
 public struct Card: Codable, Equatable {
   public var question: String
   public var answer: String
+  // public var deck: String
 
   public init(question: String, answer: String) {
     self.question = question
     self.answer = answer
+    // self.deck = deck
   }
 }
 
@@ -38,10 +40,24 @@ public struct CreateCardInput: Codable {
   public var front: String
   public var back: String
   public var userId: UUID
+  public var deckId: UUID
 
-  public init(front: String, back: String, userId: UUID) {
+  public init(front: String, back: String, userId: UUID, deckId: UUID) {
     self.front = front
     self.back = back
     self.userId = userId
+    self.deckId = deckId
+  }
+}
+
+public struct Deck: Codable, Equatable {
+  public var name: String
+  public var id: UUID
+  public var cards: [Card]
+
+  public init(name: String, id: UUID, cards: [Card]) {
+    self.name = name
+    self.id = id
+    self.cards = cards
   }
 }

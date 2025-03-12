@@ -14,12 +14,17 @@ extension URL {
 }
 
 func getDataResult<T: Codable>(_ t: T.Type, url: URL) async -> Result<T, Error> {
+  var data = Data()
   do {
-    let (data, _) = try await URLSession.shared.data(from: url)
+//    print("before request")
+    (data, _) = try await URLSession.shared.data(from: url)
+    print(String(data: data, encoding: .utf8)!)
+//    print("after request")
     let decoder = JSONDecoder()
     let decodedData = try decoder.decode(t, from: data)
     return .success(decodedData)
   } catch {
+    print("recieved: \(String(data: data, encoding: .utf8)!)")
     return .failure(error)
   }
 }

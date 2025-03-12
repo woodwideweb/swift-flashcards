@@ -4,11 +4,12 @@
 //
 //  Created by Tabitha on 1/9/25.
 //
+// UI for toggling between cards - does not make any API calls
 
 import Models
 import SwiftUI
 
-struct CardViewer: View {
+struct CardsViewer: View {
   @State var index = 0
   var cards: [Card]
 
@@ -18,8 +19,7 @@ struct CardViewer: View {
 
   var body: some View {
     VStack {
-      CardDisplay(front: current.question, back: current.answer)
-        .padding(.bottom, 30)
+      CardDisplay(front: current.question, back: current.answer, deck: "")
         .padding(.top, 70)
 
       HStack {
@@ -39,6 +39,7 @@ struct CardViewer: View {
           }
           .disabled(index == cards.count - 1)
       }
+      .frame(width:100, height: 80)
     }
     .gesture(
       DragGesture()
@@ -60,7 +61,7 @@ struct CardViewer: View {
 }
 
 #Preview {
-  CardViewer(cards: [
+  CardsViewer(cards: [
     Card(question: "hello", answer: "hola"),
     Card(question: "goodbye", answer: "adios"),
     Card(question: "gracias", answer: "thank you"),

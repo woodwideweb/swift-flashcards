@@ -8,51 +8,56 @@
 import Foundation
 import Models
 import SwiftUI
-
-enum ViewState: Equatable {
-  case loading
-  case loaded([Card])
-  case failed
-}
+import NonEmpty
 
 extension String {
   static let userIdKey = "UserID"
 }
 
 struct ContentView: View {
-  @State var state: ViewState = .loading
-  @State private var showCreateCard = false
-  @AppStorage(.userIdKey) private var userID: UUID?
-
+  
+  var decks: NonEmpty<[Deck]>
+  @State var currentDeckIndex: Int = 0
+  var userId: UUID
+  @Binding var showCreateCard: Bool
+  var onShuffle: (Int) -> Void
+  
+  var currentDeck: Deck { decks[currentDeckIndex] }
+  
   var body: some View {
 
-    if userID != nil {
       VStack {
-        if showCreateCard == false {
-          CardLogic(userID: $userID, state: $state)
-          LogoutButton(userID: $userID)
+          CardsViewer(cards: currentDeck.cards)
+
+          LogoutButton() {}
+
           Button("New Card") {
             showCreateCard = true
           }
           .font(.title3)
-        } else {
-          CreateCardForm(showCreateCard: $showCreateCard, userId: userID!) { card in
-            if case .loaded(var cards) = state {
-              cards.append(card)
-//              print("added card")
-              state = .loaded(cards)
+
+          Button("Shuffle cards") {
+//            var cards = currentDeck.cards
+//            cards.shuffle()
+            // How do I make this code work?
+//            currentDeck.cards = cards
+            // pass this function from the parent view
+            // and it will need the current deck index
+            onShuffle(currentDeckIndex)
+          }
+          .font(.title3)
+          
+          Picker("Deck", selection: $currentDeckIndex) {
+            ForEach(Array(decks.enumerated()), id: \.offset) { index, deck in
+              Text(deck.name).tag(index as Int?)
             }
           }
         }
       }
-    } else {
-      LoginFormContainer(userID: $userID)
-    }
   }
-}
 
 #Preview {
-  ContentView()
+  ContentView(decks: [Deck(name: "something", id: UUID(), cards: [Card(question: "hola", answer: "hello")])], userId: UUID(), showCreateCard: .constant(false)) {_ in }
 }
 
 extension UUID: RawRepresentable {

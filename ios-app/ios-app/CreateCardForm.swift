@@ -7,20 +7,29 @@
 
 import Models
 import SwiftUI
+import NonEmpty
 
 struct CreateCardForm: View {
   @State private var front: String = ""
   @State private var back: String = ""
   @State private var showError: Bool = false
+  @State private var deckSelection: UUID?
   @Binding var showCreateCard: Bool
   var userId: UUID
-  var onNewCard: (Card) -> Void
+  var decks: NonEmpty<[Deck]>
+  var onNewCard: (Card, UUID) -> Void
 
   var body: some View {
     Text("Create a card")
       .font(.title2)
     
     Form {
+      Picker("Deck", selection: $deckSelection) {
+        ForEach(decks, id: \.id) { deck in
+          Text(deck.name).tag(deck.id as UUID?)
+        }
+      }
+      
       TextField(text: $front, prompt: Text("Front")) {
         Text("Front")
       }
@@ -34,12 +43,12 @@ struct CreateCardForm: View {
         Task {
           let cardResult = await post(
             to: .api(path: "/cards"),
-            body: CreateCardInput(front: front, back: back, userId: userId),
+            body: CreateCardInput(front: front, back: back, userId: userId, deckId: deckSelection!),
             decodeTo: Card.self
           )
           switch cardResult {
           case .success(let card):
-            onNewCard(card)
+            onNewCard(card, deckSelection!)
             showError = false
             front = ""
             back = ""
@@ -48,6 +57,7 @@ struct CreateCardForm: View {
           }
         }
       }
+      .disabled(front.isEmpty || back.isEmpty || deckSelection == nil)
       
       
     }
@@ -66,6 +76,8 @@ struct CreateCardForm: View {
 #Preview {
   CreateCardForm(
     showCreateCard: .constant(true),
-    userId: UUID(uuidString: "9d307d61-246e-48c2-8b77-a67154b586f6")!
-  ) { _ in }
+    userId: UUID(uuidString: "9d307d61-246e-48c2-8b77-a67154b586f6")!,
+//    decks: [UUID(uuidString: "309cda4f-0b49-4f09-a582-13ef46b5c1ea")!: "Basic phrases"]
+    decks: [Deck(name: "Basic Phrases", id: UUID(uuidString: "309cda4f-0b49-4f09-a582-13ef46b5c1ea")!, cards: []), Deck(name: "Something else", id: UUID(uuidString: "9f758889-8749-45d5-9795-87524831c9ed")!, cards: [])]
+  ) { _, _ in }
 }

@@ -10,14 +10,14 @@ import Models
 import SwiftUI
 
 struct LoginFormContainer: View {
-  @Binding var userID: UUID?
+  @Binding var userId: UUID?
 
   var body: some View {
     LoginForm { username, password in
       let result = await login(username: username, password: password)
       switch result {
       case .success(let id):
-        userID = id
+        userId = id
       case .failure(let error):
         switch error {
         case .jsonEncodeError:
