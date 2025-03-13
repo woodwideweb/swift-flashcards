@@ -56,11 +56,16 @@ enum NetworkError: Error {
 func post<Input: Encodable, Response: Decodable>(
   to url: URL,
   body: Input,
-  decodeTo: Response.Type
+  decodeTo: Response.Type,
+  userId: UUID? = nil
 ) async -> Result<Response, NetworkError> {
   var request = URLRequest(url: url)
   request.httpMethod = "POST"
+  if let userId {
+    request.setValue("\(userId)", forHTTPHeaderField: "Authorization")
+  }
   request.addValue("application/json", forHTTPHeaderField: "Content-Type")
+  
 
   do {
     let json = try JSONEncoder().encode(body)

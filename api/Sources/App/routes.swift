@@ -122,6 +122,29 @@ func routes(_ app: Application) throws {
       .encode(Card(question: input.front, answer: input.back))
     return Response(status: .created, body: Response.Body(data: cardJson))
   }
+
+  app.post("decks") { req in
+    let userId = try await req.requireUserId()
+    let input = try req.content.decode(CreateDeckInput.self)
+    let deckId = UUID()
+
+    do {
+      _ = try await client
+        // make a db abstraction for insertion?
+        .execute(
+          raw: """
+            INSERT INTO decks (id, name, created_at, user_id) 
+            VALUES (\(bind: deckId), \(bind: input.name), NOW(), \(bind: userId))
+          """
+        )
+    } catch {
+      print(String(reflecting: error))
+      throw Abort(.badRequest)
+    }
+
+    let deckJson = try JSONEncoder().encode(Deck(name: input.name, id: deckId, cards: []))
+    return Response(status: .created, body: Response.Body(data: deckJson))
+  }
 }
 
 extension User: Content {}
@@ -129,6 +152,7 @@ extension Card: Content {}
 extension Deck: Content {}
 extension LoginInput: Content {}
 extension CreateCardInput: Content {}
+extension CreateDeckInput: Content {}
 
 struct DeckJoin: Codable {
   var name: String

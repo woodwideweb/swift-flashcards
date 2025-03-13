@@ -21,6 +21,7 @@ struct ContentView: View {
   @State var state: ViewState = .loading
   @State var currentDeck: UUID?
   @State var showCreateCard = false
+  @State var showCreateDeck = false
 
   var body: some View {
     if userId != nil {
@@ -32,21 +33,26 @@ struct ContentView: View {
           Text("Something went wrong. No cards to display")
           
         case .loaded(var decks):
-          // we need typesafety
           if !decks.isEmpty {
-            if !showCreateCard {
-              CardsLoader(decks: decks, userId: userId!, showCreateCard: $showCreateCard) { deckIndex in
+            if !showCreateCard && !showCreateDeck {
+              CardsLoader(decks: decks, userId: userId!, showCreateCard: $showCreateCard, showCreateDeck: $showCreateDeck) { deckIndex in
                 var cards = decks[deckIndex].cards
                 cards.shuffle()
                 decks[deckIndex].cards = cards
                 state = .loaded(decks)
               }
-            } else {
+            } else if showCreateCard {
               CreateCardForm(showCreateCard: $showCreateCard, userId: userId!, decks: decks) {card, id in
                 var deck = decks.first(where: { $0.id == id })!
                 let index = decks.firstIndex(where: { $0.id == id })!
                 deck.cards.append(card)
                 decks[index] = deck
+                state = .loaded(decks)
+              }
+            } else if showCreateDeck {
+              CreateDeckForm(showCreateDeck: $showCreateDeck, userId: userId!) { deck in
+                decks.append(deck)
+                // if you try to go to the new deck, you crash the app ;)
                 state = .loaded(decks)
               }
             }

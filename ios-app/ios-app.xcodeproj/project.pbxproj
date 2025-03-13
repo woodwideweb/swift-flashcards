@@ -17,6 +17,7 @@
 		2C9979542D7A51A100BFBABB /* NonEmpty in Frameworks */ = {isa = PBXBuildFile; productRef = 2C9979532D7A51A100BFBABB /* NonEmpty */; };
 		2C9B001E2D39AD8F0000FC2B /* CreateCardForm.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2C9B001D2D39AD8F0000FC2B /* CreateCardForm.swift */; };
 		2CAEFB022D147DF1001F393E /* LogoutButton.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2CAEFB012D147DF1001F393E /* LogoutButton.swift */; };
+		2CB1524C2D8366B000D78AB1 /* CreateDeckForm.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2CB1524B2D8366B000D78AB1 /* CreateDeckForm.swift */; };
 		2CC285A42CCAEB7700B4B904 /* Models in Frameworks */ = {isa = PBXBuildFile; productRef = 2CC285A32CCAEB7700B4B904 /* Models */; };
 		2CD449332CA60228008E9F77 /* ios_appApp.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2CD449322CA60228008E9F77 /* ios_appApp.swift */; };
 		2CD449352CA60228008E9F77 /* CardsLoader.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2CD449342CA60228008E9F77 /* CardsLoader.swift */; };
@@ -34,6 +35,7 @@
 		2C98E6D12D19D14300A8A462 /* ContentView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ContentView.swift; sourceTree = "<group>"; };
 		2C9B001D2D39AD8F0000FC2B /* CreateCardForm.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CreateCardForm.swift; sourceTree = "<group>"; };
 		2CAEFB012D147DF1001F393E /* LogoutButton.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LogoutButton.swift; sourceTree = "<group>"; };
+		2CB1524B2D8366B000D78AB1 /* CreateDeckForm.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CreateDeckForm.swift; sourceTree = "<group>"; };
 		2CD4492F2CA60228008E9F77 /* ios-app.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = "ios-app.app"; sourceTree = BUILT_PRODUCTS_DIR; };
 		2CD449322CA60228008E9F77 /* ios_appApp.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ios_appApp.swift; sourceTree = "<group>"; };
 		2CD449342CA60228008E9F77 /* CardsLoader.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CardsLoader.swift; sourceTree = "<group>"; };
@@ -77,6 +79,7 @@
 				2CD449342CA60228008E9F77 /* CardsLoader.swift */,
 				2C9B001D2D39AD8F0000FC2B /* CreateCardForm.swift */,
 				2C98E6D12D19D14300A8A462 /* ContentView.swift */,
+				2CB1524B2D8366B000D78AB1 /* CreateDeckForm.swift */,
 				2C93E52B2CC19B3500244A80 /* CardDisplay.swift */,
 				2C5341CB2D307CBA005F33DF /* CardsViewer.swift */,
 				2C98E6CF2D19C03100A8A462 /* ColorExtension.swift */,
@@ -177,6 +180,7 @@
 			buildActionMask = 2147483647;
 			files = (
 				2CD449352CA60228008E9F77 /* CardsLoader.swift in Sources */,
+				2CB1524C2D8366B000D78AB1 /* CreateDeckForm.swift in Sources */,
 				2CAEFB022D147DF1001F393E /* LogoutButton.swift in Sources */,
 				2C93E52C2CC19B3500244A80 /* CardDisplay.swift in Sources */,
 				2C98E6D02D19C03100A8A462 /* ColorExtension.swift in Sources */,

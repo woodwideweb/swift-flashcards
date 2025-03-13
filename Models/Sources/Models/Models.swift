@@ -61,3 +61,11 @@ public struct Deck: Codable, Equatable {
     self.cards = cards
   }
 }
+
+public struct CreateDeckInput: Codable {
+  public var name: String
+
+  public init(name: String) {
+    self.name = name
+  }
+}

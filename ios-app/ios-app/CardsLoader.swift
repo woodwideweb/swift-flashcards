@@ -20,6 +20,7 @@ struct CardsLoader: View {
   @State var currentDeckIndex: Int = 0
   var userId: UUID
   @Binding var showCreateCard: Bool
+  @Binding var showCreateDeck: Bool
   var onShuffle: (Int) -> Void
   
   var currentDeck: Deck { decks[currentDeckIndex] }
@@ -35,14 +36,13 @@ struct CardsLoader: View {
             showCreateCard = true
           }
           .font(.title3)
+        
+          Button("New Deck") {
+            showCreateDeck = true
+          }
+          .font(.title3)
 
           Button("Shuffle cards") {
-//            var cards = currentDeck.cards
-//            cards.shuffle()
-            // How do I make this code work?
-//            currentDeck.cards = cards
-            // pass this function from the parent view
-            // and it will need the current deck index
             onShuffle(currentDeckIndex)
           }
           .font(.title3)
@@ -57,7 +57,7 @@ struct CardsLoader: View {
   }
 
 #Preview {
-  CardsLoader(decks: [Deck(name: "something", id: UUID(), cards: [Card(question: "hola", answer: "hello")])], userId: UUID(), showCreateCard: .constant(false)) {_ in }
+  CardsLoader(decks: [Deck(name: "something", id: UUID(), cards: [Card(question: "hola", answer: "hello")])], userId: UUID(), showCreateCard: .constant(false), showCreateDeck: .constant(false)) {_ in }
 }
 
 extension UUID: RawRepresentable {
