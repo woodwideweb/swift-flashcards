@@ -18,8 +18,6 @@ func getDataResult<T: Codable>(_ t: T.Type, url: URL, userId: UUID) async -> Res
   do {
     var request = URLRequest(url: url)
     request.setValue("\(userId)", forHTTPHeaderField: "Authorization")
-    // change call to for: request
-//    (data, _) = try await URLSession.shared.data(from: url)
     (data, _) = try await URLSession.shared.data(for: request)
 //    print(String(data: data, encoding: .utf8)!)
     let decoder = JSONDecoder()
@@ -65,7 +63,6 @@ func post<Input: Encodable, Response: Decodable>(
     request.setValue("\(userId)", forHTTPHeaderField: "Authorization")
   }
   request.addValue("application/json", forHTTPHeaderField: "Content-Type")
-  
 
   do {
     let json = try JSONEncoder().encode(body)

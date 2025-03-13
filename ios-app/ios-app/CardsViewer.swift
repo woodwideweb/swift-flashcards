@@ -25,25 +25,25 @@ struct CardsViewer: View {
       VStack {
         CardDisplay(front: current.question, back: current.answer, deck: "")
           .padding(.top, 70)
-        
+
         HStack {
           Button { index -= 1 }
         label: {
-          Image(systemName: "arrow.left.circle")
-            .resizable()
-            .frame(width: 30, height: 30)
-        }
-        .disabled(index == 0)
-          
+              Image(systemName: "arrow.left.circle")
+                .resizable()
+                .frame(width: 30, height: 30)
+            }
+            .disabled(index == 0)
+
           Button { index += 1 }
         label: {
-          Image(systemName: "arrow.right.circle")
-            .resizable()
-            .frame(width: 30, height: 30)
+              Image(systemName: "arrow.right.circle")
+                .resizable()
+                .frame(width: 30, height: 30)
+            }
+            .disabled(index == cards.count - 1)
         }
-        .disabled(index == cards.count - 1)
-        }
-        .frame(width:100, height: 80)
+        .frame(width: 100, height: 80)
       }
       .gesture(
         DragGesture()

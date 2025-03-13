@@ -7,8 +7,8 @@
 // Loads decks and controls whether the state shown is loading, failure, or loaded. Makes API calls
 
 import Models
-import SwiftUI
 import NonEmpty
+import SwiftUI
 
 enum ViewState: Equatable {
   case loading
@@ -31,18 +31,27 @@ struct ContentView: View {
           ProgressView()
         case .failed:
           Text("Something went wrong. No cards to display")
-          
+
         case .loaded(var decks):
           if !decks.isEmpty {
-            if !showCreateCard && !showCreateDeck {
-              CardsLoader(decks: decks, userId: userId!, showCreateCard: $showCreateCard, showCreateDeck: $showCreateDeck) { deckIndex in
+            if !showCreateCard, !showCreateDeck {
+              CardsLoader(
+                decks: decks,
+                userId: userId!,
+                showCreateCard: $showCreateCard,
+                showCreateDeck: $showCreateDeck
+              ) { deckIndex in
                 var cards = decks[deckIndex].cards
                 cards.shuffle()
                 decks[deckIndex].cards = cards
                 state = .loaded(decks)
               }
             } else if showCreateCard {
-              CreateCardForm(showCreateCard: $showCreateCard, userId: userId!, decks: decks) {card, id in
+              CreateCardForm(
+                showCreateCard: $showCreateCard,
+                userId: userId!,
+                decks: decks
+              ) { card, id in
                 var deck = decks.first(where: { $0.id == id })!
                 let index = decks.firstIndex(where: { $0.id == id })!
                 deck.cards.append(card)

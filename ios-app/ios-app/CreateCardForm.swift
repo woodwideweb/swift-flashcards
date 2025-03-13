@@ -6,8 +6,8 @@
 //
 
 import Models
-import SwiftUI
 import NonEmpty
+import SwiftUI
 
 struct CreateCardForm: View {
   @State private var front: String = ""
@@ -22,23 +22,22 @@ struct CreateCardForm: View {
   var body: some View {
     Text("Create a card")
       .font(.title2)
-    
+
     Form {
       Picker("Deck", selection: $deckSelection) {
         ForEach(decks, id: \.id) { deck in
           Text(deck.name).tag(deck.id as UUID?)
         }
       }
-      
+
       TextField(text: $front, prompt: Text("Front")) {
         Text("Front")
       }
-      
+
       TextField(text: $back, prompt: Text("Back")) {
         Text("Back")
       }
-      
-      
+
       Button("Create") {
         Task {
           let cardResult = await post(
@@ -58,15 +57,13 @@ struct CreateCardForm: View {
         }
       }
       .disabled(front.isEmpty || back.isEmpty || deckSelection == nil)
-      
-      
     }
-    
+
     Button("Back to cards") {
       showCreateCard = false
     }
     .alert("Something went wrong", isPresented: $showError) {
-      Button("OK", role: .cancel) { }
+      Button("OK", role: .cancel) {}
     } message: {
       Text("Please try again.")
     }
@@ -78,6 +75,17 @@ struct CreateCardForm: View {
     showCreateCard: .constant(true),
     userId: UUID(uuidString: "9d307d61-246e-48c2-8b77-a67154b586f6")!,
 //    decks: [UUID(uuidString: "309cda4f-0b49-4f09-a582-13ef46b5c1ea")!: "Basic phrases"]
-    decks: [Deck(name: "Basic Phrases", id: UUID(uuidString: "309cda4f-0b49-4f09-a582-13ef46b5c1ea")!, cards: []), Deck(name: "Something else", id: UUID(uuidString: "9f758889-8749-45d5-9795-87524831c9ed")!, cards: [])]
+    decks: [
+      Deck(
+        name: "Basic Phrases",
+        id: UUID(uuidString: "309cda4f-0b49-4f09-a582-13ef46b5c1ea")!,
+        cards: []
+      ),
+      Deck(
+        name: "Something else",
+        id: UUID(uuidString: "9f758889-8749-45d5-9795-87524831c9ed")!,
+        cards: []
+      ),
+    ]
   ) { _, _ in }
 }
