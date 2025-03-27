@@ -13,11 +13,13 @@ extension URL {
   }
 }
 
-func getDataResult<T: Codable>(_ t: T.Type, url: URL, userId: UUID) async -> Result<T, Error> {
+func getDataResult<T: Codable>(_ t: T.Type, url: URL, userId: UUID? = nil) async -> Result<T, Error> {
   var data = Data()
   do {
     var request = URLRequest(url: url)
-    request.setValue("\(userId)", forHTTPHeaderField: "Authorization")
+    if let userId {
+      request.setValue("Bearer \(userId)", forHTTPHeaderField: "Authorization")
+    }
     (data, _) = try await URLSession.shared.data(for: request)
 //    print(String(data: data, encoding: .utf8)!)
     let decoder = JSONDecoder()
@@ -60,7 +62,7 @@ func post<Input: Encodable, Response: Decodable>(
   var request = URLRequest(url: url)
   request.httpMethod = "POST"
   if let userId {
-    request.setValue("\(userId)", forHTTPHeaderField: "Authorization")
+    request.setValue("Bearer \(userId)", forHTTPHeaderField: "Authorization")
   }
   request.addValue("application/json", forHTTPHeaderField: "Content-Type")
 

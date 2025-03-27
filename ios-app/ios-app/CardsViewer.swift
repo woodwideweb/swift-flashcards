@@ -74,3 +74,8 @@ struct CardsViewer: View {
     Card(question: "gracias", answer: "thank you"),
   ])
 }
+
+#Preview("empty cards array") {
+  CardsViewer(cards: [
+  ])
+}

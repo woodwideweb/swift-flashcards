@@ -8,13 +8,11 @@
 import SwiftUI
 
 struct LogoutButton: View {
-//  @Binding var userID: UUID?
-  var onLogout: () -> Void
+  @AppStorage(.userIdKey) private var userId: UUID?
 
   var body: some View {
     Button("Log Out") {
-      onLogout()
-//      self.userID = nil
+      userId = nil
     }
     .font(.title3)
   }

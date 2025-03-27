@@ -30,8 +30,8 @@ struct CardsLoader: View {
     VStack {
       CardsViewer(cards: currentDeck.cards)
 
-      LogoutButton {}
-
+      LogoutButton()
+      
       Button("New Card") {
         showCreateCard = true
       }

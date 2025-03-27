@@ -13,6 +13,7 @@ import SwiftUI
 enum ViewState: Equatable {
   case loading
   case loaded(NonEmpty<[Deck]>)
+  case empty
   case failed
 }
 
@@ -24,56 +25,53 @@ struct ContentView: View {
   @State var showCreateDeck = false
 
   var body: some View {
-    if userId != nil {
+    if let userId {
       VStack {
         switch self.state {
         case .loading:
           ProgressView()
+        case .empty:
+          Text("empty")
         case .failed:
           Text("Something went wrong. No cards to display")
 
         case .loaded(var decks):
-          if !decks.isEmpty {
-            if !showCreateCard, !showCreateDeck {
-              CardsLoader(
-                decks: decks,
-                userId: userId!,
-                showCreateCard: $showCreateCard,
-                showCreateDeck: $showCreateDeck
-              ) { deckIndex in
-                var cards = decks[deckIndex].cards
-                cards.shuffle()
-                decks[deckIndex].cards = cards
-                state = .loaded(decks)
-              }
-            } else if showCreateCard {
-              CreateCardForm(
-                showCreateCard: $showCreateCard,
-                userId: userId!,
-                decks: decks
-              ) { card, id in
-                var deck = decks.first(where: { $0.id == id })!
-                let index = decks.firstIndex(where: { $0.id == id })!
-                deck.cards.append(card)
-                decks[index] = deck
-                state = .loaded(decks)
-              }
-            } else if showCreateDeck {
-              CreateDeckForm(showCreateDeck: $showCreateDeck, userId: userId!) { deck in
-                decks.append(deck)
-                // if you try to go to the new deck, you crash the app ;)
-                state = .loaded(decks)
-              }
+          if !showCreateCard, !showCreateDeck {
+            CardsLoader(
+              decks: decks,
+              userId: userId,
+              showCreateCard: $showCreateCard,
+              showCreateDeck: $showCreateDeck
+            ) { deckIndex in
+              var cards = decks[deckIndex].cards
+              cards.shuffle()
+              decks[deckIndex].cards = cards
+              state = .loaded(decks)
             }
-          } else {
-            Text("no decks")
+          } else if showCreateCard {
+            CreateCardForm(
+              showCreateCard: $showCreateCard,
+              userId: userId,
+              decks: decks
+            ) { card, id in
+              var deck = decks.first(where: { $0.id == id })!
+              let index = decks.firstIndex(where: { $0.id == id })!
+              deck.cards.append(card)
+              decks[index] = deck
+              state = .loaded(decks)
+            }
+          } else if showCreateDeck {
+            CreateDeckForm(showCreateDeck: $showCreateDeck, userId: userId) { deck in
+              decks.append(deck)
+              state = .loaded(decks)
+            }
           }
         }
       }
       .padding()
       .task {
         if state == .loading {
-          try? await self.getCards(id: userId!)
+          try? await self.getCards(id: userId)
         }
       }
     } else {
@@ -84,12 +82,15 @@ struct ContentView: View {
   func getCards(id: UUID) async throws {
     let deckResult = await getDataResult([Deck].self, url: URL.api(path: "/decks"), userId: id)
     switch deckResult {
-    case .success([]):
-      // change this...
-      state = .failed
-    case .success(let decks):
-      // fix this
-      state = .loaded(.init(decks)!)
+    case .success(var decks):
+      if !decks.isEmpty {
+        let head = decks.removeFirst()
+        var nonEmptyDecks: NonEmpty<[Deck]> = .init(head)
+        nonEmptyDecks.append(contentsOf: decks)
+        state = .loaded(nonEmptyDecks)
+      } else {
+        state = .empty
+      }
     case .failure:
       state = .failed
     }

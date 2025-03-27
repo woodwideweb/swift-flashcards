@@ -43,7 +43,8 @@ struct CreateCardForm: View {
           let cardResult = await post(
             to: .api(path: "/cards"),
             body: CreateCardInput(front: front, back: back, deckId: deckSelection!),
-            decodeTo: Card.self
+            decodeTo: Card.self,
+            userId: userId
           )
           switch cardResult {
           case .success(let card):
@@ -74,7 +75,6 @@ struct CreateCardForm: View {
   CreateCardForm(
     showCreateCard: .constant(true),
     userId: UUID(uuidString: "9d307d61-246e-48c2-8b77-a67154b586f6")!,
-//    decks: [UUID(uuidString: "309cda4f-0b49-4f09-a582-13ef46b5c1ea")!: "Basic phrases"]
     decks: [
       Deck(
         name: "Basic Phrases",
